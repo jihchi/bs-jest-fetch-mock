@@ -1,0 +1,26 @@
+{
+  "name": "bs-jest-fetch-mock",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "bsb -make-world",
+    "start": "bsb -make-world -w",
+    "clean": "bsb -clean-world",
+    "test": "bsb -make-world && jest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "BuckleScript",
+    "jest-fetch-mock"
+  ],
+  "author": "Jihchi Lee <achi@987.tw>",
+  "license": "MIT",
+  "devDependencies": {
+    "@glennsl/bs-jest": "^0.4.9",
+    "bs-platform": "^7.0.1"
+  },
+  "peerDependencies": {
+    "jest-fetch-mock": "^3.0.0"
+  },
+  "description": "jest-fetch-mock bindings for BuckleScript in Reason",
+  "repository": "https://github.com/jihchi/bs-jest-fetch-mock.git"
+}

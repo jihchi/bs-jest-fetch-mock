@@ -1,0 +1,18 @@
+{
+  "name": "bs-jest-fetch-mock",
+  "version": "0.3.1",
+  "namespace": true,
+  "sources": [
+    { "dir": "src" },
+    { "dir": "__tests__", "type": "dev" }
+  ],
+  "bs-dependencies": [],
+  "suffix": ".bs.js",
+  "bs-dev-dependencies": [
+    "@glennsl/bs-jest"
+  ],
+  "warnings": {
+    "error": "+101"
+  },
+  "refmt": 3
+}
