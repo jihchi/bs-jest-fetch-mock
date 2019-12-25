@@ -4,6 +4,8 @@ open JestFetchMock;
 open Fetch;
 open Js.Promise;
 
+external unsafeErrorToString: Js.Promise.error => string = "%identity";
+
 beforeEach(() => resetMocks());
 
 describe("mockResponse", () => {
@@ -102,6 +104,54 @@ describe("mockResponses", () => {
     ))
     |> then_(resp =>
          resp |> expect |> toEqual((expected[0], expected[1])) |> resolve
+       );
+  });
+});
+
+describe("mockReject", () => {
+  testPromise("accept a string", () => {
+    let expected = "oops";
+    mockReject(Str(expected));
+
+    fetch("http://does_not_matter")
+    |> then_(_ => fail("should get rejected") |> resolve)
+    |> catch(resp =>
+         resp |> unsafeErrorToString |> expect |> toEqual(expected) |> resolve
+       );
+  });
+
+  testPromise("accept a function", () => {
+    let expected = "oops";
+    mockReject(Fn(() => expected->resolve));
+
+    fetch("http://does_not_matter")
+    |> then_(_ => fail("should get rejected") |> resolve)
+    |> catch(resp =>
+         resp |> unsafeErrorToString |> expect |> toEqual(expected) |> resolve
+       );
+  });
+});
+
+describe("mockRejectOnce", () => {
+  testPromise("accept a string", () => {
+    let expected = "oops";
+    mockRejectOnce(Str(expected));
+
+    fetch("http://does_not_matter")
+    |> then_(_ => fail("should get rejected") |> resolve)
+    |> catch(resp =>
+         resp |> unsafeErrorToString |> expect |> toEqual(expected) |> resolve
+       );
+  });
+
+  testPromise("accept a function", () => {
+    let expected = "oops";
+    mockRejectOnce(Fn(() => expected->resolve));
+
+    fetch("http://does_not_matter")
+    |> then_(_ => fail("should get rejected") |> resolve)
+    |> catch(resp =>
+         resp |> unsafeErrorToString |> expect |> toEqual(expected) |> resolve
        );
   });
 });

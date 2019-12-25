@@ -14,6 +14,10 @@ let responseToParameter = response =>
   | Fn(fn) => `Fn(fn)
   };
 
+let promiseReject: string => Js.Promise.t(Js.Promise.error) = [%raw
+  str => "return Promise.reject(str)"
+];
+
 [@bs.scope "fetch"] [@bs.val] external resetMocks: unit => unit = "resetMocks";
 
 [@bs.scope "fetch"] [@bs.val]
@@ -61,3 +65,35 @@ external mockResponsesStr: array((string, Js.Undefined.t(init))) => unit =
 external mockResponsesFn:
   array((unit => Js.Promise.t(string), Js.Undefined.t(init))) => unit =
   "mockResponses";
+
+[@bs.scope "fetch"] [@bs.val]
+external rawMockReject:
+  (
+  [@bs.unwrap]
+  [ | `Str(string) | `Fn(unit => Js.Promise.t(Js.Promise.error))]
+  ) =>
+  unit =
+  "mockReject";
+
+let mockReject = reject =>
+  switch (reject) {
+  | Str(str) => rawMockReject(`Str(str))
+  | Fn(fn) =>
+    rawMockReject(`Fn(() => fn() |> Js.Promise.then_(promiseReject)))
+  };
+
+[@bs.scope "fetch"] [@bs.val]
+external rawMockRejectOnce:
+  (
+  [@bs.unwrap]
+  [ | `Str(string) | `Fn(unit => Js.Promise.t(Js.Promise.error))]
+  ) =>
+  unit =
+  "mockRejectOnce";
+
+let mockRejectOnce = reject =>
+  switch (reject) {
+  | Str(str) => rawMockRejectOnce(`Str(str))
+  | Fn(fn) =>
+    rawMockRejectOnce(`Fn(() => fn() |> Js.Promise.then_(promiseReject)))
+  };
