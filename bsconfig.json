@@ -1,7 +1,11 @@
 {
   "name": "bs-jest-fetch-mock",
   "version": "1.0.0",
-  "namespace": true,
+	"namespace": true,
+	"package-specs": [{
+    "module": "commonjs",
+    "in-source": true
+  }],
   "sources": [
     { "dir": "src" },
     { "dir": "__tests__", "type": "dev" }
@@ -9,6 +13,7 @@
   "bs-dependencies": [],
   "suffix": ".bs.js",
   "bs-dev-dependencies": [
+		"bs-fetch",
     "@glennsl/bs-jest"
   ],
   "warnings": {
