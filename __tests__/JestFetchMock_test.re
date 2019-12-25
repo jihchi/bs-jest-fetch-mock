@@ -72,7 +72,10 @@ describe("mockResponses", () => {
       {|{ "body_1": "is a JSON string" }|},
       {|{ "body_2": "is a JSON string" }|},
     |];
-    mockResponses([|[|expected[0]|], [|expected[1]|]|]);
+    mockResponsesStr([|
+      (expected[0], Js.Undefined.empty),
+      (expected[1], Js.Undefined.empty),
+    |]);
 
     all2((
       fetch("http://does_not_matter_1") |> then_(Response.text),
@@ -88,9 +91,9 @@ describe("mockResponses", () => {
       {|{ "body_1": "is a JSON string from a function" }|},
       {|{ "body_2": "is a JSON string from a function" }|},
     |];
-    mockResponses([|
-      [|(.) => resolve(expected[0])|],
-      [|(.) => resolve(expected[1])|],
+    mockResponsesFn([|
+      (() => resolve(expected[0]), Js.Undefined.empty),
+      (() => resolve(expected[1]), Js.Undefined.empty),
     |]);
 
     all2((

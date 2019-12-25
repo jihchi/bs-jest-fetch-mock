@@ -48,5 +48,11 @@ let mockResponseOnce = (~response: response, ~init: option(init)=?, ()) =>
 
 let once = mockResponseOnce;
 
-[@bs.scope "fetch"] [@bs.val]
-external mockResponses: array('a) => unit = "mockResponses";
+[@bs.scope "fetch"] [@bs.val] [@bs.variadic]
+external mockResponsesStr: array((string, Js.Undefined.t(init))) => unit =
+  "mockResponses";
+
+[@bs.scope "fetch"] [@bs.val] [@bs.variadic]
+external mockResponsesFn:
+  array((unit => Js.Promise.t(string), Js.Undefined.t(init))) => unit =
+  "mockResponses";
