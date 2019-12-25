@@ -1,6 +1,6 @@
 {
   "name": "bs-jest-fetch-mock",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "jest-fetch-mock bindings for BuckleScript in Reason",
   "repository": "https://github.com/jihchi/bs-jest-fetch-mock.git",
   "scripts": {
@@ -16,6 +16,9 @@
   ],
   "author": "Jihchi Lee <achi@987.tw>",
   "license": "MIT",
+  "files": [
+		"/src/**/*.re"
+	],
   "dependencies": {},
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.9",
