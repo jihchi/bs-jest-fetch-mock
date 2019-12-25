@@ -22,8 +22,7 @@ external enableMocks: unit => unit = "enableMocks";
 [@bs.scope "fetch"] [@bs.val]
 external disableMocks: unit => unit = "disableMocks";
 
-[@bs.scope "fetch"] [@bs.val]
-external mockAbort: unit => unit = "mockAbort";
+[@bs.scope "fetch"] [@bs.val] external mockAbort: unit => unit = "mockAbort";
 
 [@bs.scope "fetch"] [@bs.val]
 external mockAbortOnce: unit => unit = "mockAbortOnce";
