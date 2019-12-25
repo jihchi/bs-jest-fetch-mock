@@ -23,6 +23,12 @@ external enableMocks: unit => unit = "enableMocks";
 external disableMocks: unit => unit = "disableMocks";
 
 [@bs.scope "fetch"] [@bs.val]
+external mockAbort: unit => unit = "mockAbort";
+
+[@bs.scope "fetch"] [@bs.val]
+external mockAbortOnce: unit => unit = "mockAbortOnce";
+
+[@bs.scope "fetch"] [@bs.val]
 external rawMockResponse:
   (
     [@bs.unwrap] [ | `Str(string) | `Fn(unit => Js.Promise.t(string))],
