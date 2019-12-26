@@ -2,9 +2,13 @@ type response =
   | Str(string)
   | Fn(unit => Js.Promise.t(string));
 
+[@bs.deriving abstract]
 type init = {
+  [@bs.optional]
   status: int,
+  [@bs.optional]
   statusText: string,
+  [@bs.optional]
   headers: Js.Dict.t(string),
 };
 

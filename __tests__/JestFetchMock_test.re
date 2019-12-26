@@ -18,6 +18,40 @@ describe("mockResponse", () => {
     |> then_(resp => resp |> expect |> toEqual(expected) |> resolve);
   });
 
+  testPromise("accept a string and init", () => {
+    let expected = {|{ "body": "is a JSON string" }|};
+    mockResponse(
+      ~response=Str(expected),
+      ~init=
+        init(
+          ~status=204,
+          ~statusText="nothing for you",
+          ~headers=Js.Dict.fromList([("Authorization", "Bearer <token>")]),
+          (),
+        ),
+      (),
+    );
+
+    fetch("http://does_not_matter")
+    |> then_(resp =>
+         all4((
+           Response.text(resp),
+           Response.status(resp)->resolve,
+           Response.statusText(resp)->resolve,
+           Response.headers(resp)
+           ->Headers.get("Authorization", _)
+           ->Belt.Option.getExn
+           ->resolve,
+         ))
+       )
+    |> then_(resp =>
+         resp
+         |> expect
+         |> toEqual((expected, 204, "nothing for you", "Bearer <token>"))
+         |> resolve
+       );
+  });
+
   testPromise("accept a function", () => {
     let expected = {|{ "body": "is a JSON string from a function" }|};
     mockResponse(~response=Fn(() => resolve(expected)), ());

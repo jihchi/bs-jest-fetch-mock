@@ -2,18 +2,23 @@
 
 > [jest-fetch-mock](https://github.com/jefflau/jest-fetch-mock) bindings for [BuckleScript](https://github.com/bloomberg/bucklescript) in [Reason](https://github.com/facebook/reason)
 
-# Install
+# Installation
 
 ```
 npm install --save bs-jest-fetch-mock
+
+# or ...
+
+yarn add -D bs-jest-fetch-mock
 ```
 
-Then add `bs-jest-fetch-mock` as a dependency to `bsconfig.json`:
+# Usage
+
+Add to `bsconfig.json`
 
 ```diff
   ...
   "bs-dependencies": [
-    // add your dependencies here. You'd usually install them normally through `npm install my-dependency`. If my-dependency has a bsconfig.json too, then everything will work seamlessly.
 +   "bs-jest-fetch-mock"
   ]
   ...
@@ -21,7 +26,113 @@ Then add `bs-jest-fetch-mock` as a dependency to `bsconfig.json`:
 
 ## API
 
-*(TBD)*
+For more example, please refer to [`JestFetchMock_test.re`](/__tests__/JestFetchMock_test.re)
+
+## `BsJestFetchMock.mockResponse`
+
+**string**
+
+```re
+BsJestFetchMoc.mockResponse(~response=Str({|{ "body": "ok" }|}), ());
+```
+
+**function**
+
+```re
+BsJestFetchMoc.mockResponse(
+  ~response=Fn(() => Js.Promise.resolve({|{ "body": "ok" }|})),
+  (),
+);
+```
+
+**with init**
+
+```re
+BsJestFetchMoc.mockResponse(
+  ~response=Str({|{ "body": "ok" }|}),
+  ~init=
+    init(
+      ~status=200,
+      ~statusText="ok",
+      ~headers=Js.Dict.fromList([("Authorization", "Bearer <token>")]),
+    ),
+  (),
+);
+```
+
+## `BsJestFetchMock.mockResponseOnce`
+
+Same function signature as `mockResponse`.
+
+## `BsJestFetchMock.mockResponsesStr`
+
+```re
+BsJestFetchMock.mockResponsesStr([|
+  ({|"first body"|}, Js.Undefined.empty),
+  (
+    {|"second body"|},
+    Js.Undefined.return(
+      init(
+        ~status=200,
+        ~statusText="ok",
+        ~headers=Js.Dict.fromList([("Authorization", "Bearer <token>")]),
+        (),
+      ),
+    ),
+  ),
+|]);
+```
+
+## `BsJestFetchMock.mockResponsesFn`
+
+```re
+BsJestFetchMock.mockResponsesFn([|
+  (() => Js.Promise.resolve({|"first body"|}), Js.Undefined.empty),
+  (
+    () => Js.Promise.resolve({|"second body"|}),
+    Js.Undefined.return(
+      init(
+        ~status=200,
+        ~statusText="ok",
+        ~headers=Js.Dict.fromList([("Authorization", "Bearer <token>")]),
+        (),
+      ),
+    ),
+  ),
+|]);
+```
+
+## `BsJestFetchMock.mockReject`
+
+**string**
+```re
+BsJestFetchMoc.mockReject(Str({|{ "body": "ok" }|}));
+```
+
+**function**
+```re
+BsJestFetchMoc.mockReject(Fn(() => Js.Promise.resolve({|{ "body": "ok" }|})));
+```
+
+## `BsJestFetchMock.mockRejectOnce`
+
+Same function signature as `mockReject`.
+
+## `BsJestFetchMock.mockAbort`
+
+```re
+BsJestFetchMoc.mockReject();
+```
+
+## `BsJestFetchMock.mockAbortOnce`
+
+Same function signature as `mockAbort`.
+
+## `BsJestFetchMock.resetMocks`
+
+```re
+BsJestFetchMock.resetMocks();
+```
 
 # Testing the library
 
