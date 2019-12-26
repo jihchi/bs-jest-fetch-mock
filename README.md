@@ -4,7 +4,7 @@
 
 # Installation
 
-```
+```sh
 npm install --save bs-jest-fetch-mock
 
 # or ...
@@ -32,13 +32,13 @@ For more example, please refer to [`JestFetchMock_test.re`](/__tests__/JestFetch
 
 **string**
 
-```re
+```reason
 BsJestFetchMock.mockResponse(~response=Str({|{ "body": "ok" }|}), ());
 ```
 
 **function**
 
-```re
+```reason
 BsJestFetchMock.mockResponse(
   ~response=Fn(() => Js.Promise.resolve({|{ "body": "ok" }|})),
   (),
@@ -47,7 +47,7 @@ BsJestFetchMock.mockResponse(
 
 **with init**
 
-```re
+```reason
 BsJestFetchMock.mockResponse(
   ~response=Str({|{ "body": "ok" }|}),
   ~init=
@@ -66,7 +66,7 @@ Same function signature as `mockResponse`.
 
 ## `BsJestFetchMock.mockResponsesStr`
 
-```re
+```reason
 BsJestFetchMock.mockResponsesStr([|
   ({|"first body"|}, Js.Undefined.empty),
   (
@@ -85,7 +85,7 @@ BsJestFetchMock.mockResponsesStr([|
 
 ## `BsJestFetchMock.mockResponsesFn`
 
-```re
+```reason
 BsJestFetchMock.mockResponsesFn([|
   (() => Js.Promise.resolve({|"first body"|}), Js.Undefined.empty),
   (
@@ -105,12 +105,12 @@ BsJestFetchMock.mockResponsesFn([|
 ## `BsJestFetchMock.mockReject`
 
 **string**
-```re
+```reason
 BsJestFetchMock.mockReject(Str({|{ "body": "ok" }|}));
 ```
 
 **function**
-```re
+```reason
 BsJestFetchMock.mockReject(Fn(() => Js.Promise.resolve({|{ "body": "ok" }|})));
 ```
 
@@ -120,7 +120,7 @@ Same function signature as `mockReject`.
 
 ## `BsJestFetchMock.mockAbort`
 
-```re
+```reason
 BsJestFetchMock.mockReject();
 ```
 
@@ -130,7 +130,7 @@ Same function signature as `mockAbort`.
 
 ## `BsJestFetchMock.resetMocks`
 
-```re
+```reason
 BsJestFetchMock.resetMocks();
 ```
 
@@ -146,4 +146,3 @@ this will compile and execute tests with `bs-jest`
 
 Don't hesitate to open a PR with a new binding - while bumping up the amount of covered bindings in the README.
 There are tests, use them and write the most simple test you can think of to make sure that the bindings work correctly.
-[You can read more about contributing here](CONTRIBUTING.md)
