@@ -116,7 +116,7 @@ BsJestFetchMock.mockReject(Str({|{ "body": "ok" }|}));
 
 **function**
 ```reason
-BsJestFetchMock.mockReject(Fn(() => Js.Promise.resolve({|{ "body": "ok" }|})));
+BsJestFetchMock.mockReject(Fn(_req => Js.Promise.resolve({|{ "body": "ok" }|})));
 ```
 
 ## `BsJestFetchMock.mockRejectOnce`
