@@ -28,18 +28,20 @@ Add to `bsconfig.json`
 
 For more example, please refer to [`JestFetchMock_test.re`](/__tests__/JestFetchMock_test.re)
 
-## `BsJestFetchMock.mockResponse`
+Open or prepend prefix `BsJestFetchMock` if you are using `namespace: true` in `bsconfig.json`.
+
+## `JestFetchMock.mockResponse`
 
 **string**
 
 ```reason
-BsJestFetchMock.mockResponse(~response=Str({|{ "body": "ok" }|}), ());
+JestFetchMock.mockResponse(~response=Str({|{ "body": "ok" }|}), ());
 ```
 
 **function**
 
 ```reason
-BsJestFetchMock.mockResponse(
+JestFetchMock.mockResponse(
   ~response=
     Fn(
       req =>
@@ -53,7 +55,7 @@ BsJestFetchMock.mockResponse(
 **with init**
 
 ```reason
-BsJestFetchMock.mockResponse(
+JestFetchMock.mockResponse(
   ~response=Str({|{ "body": "ok" }|}),
   ~init=
     init(
@@ -65,14 +67,14 @@ BsJestFetchMock.mockResponse(
 );
 ```
 
-## `BsJestFetchMock.mockResponseOnce`
+## `JestFetchMock.mockResponseOnce`
 
 Same function signature as `mockResponse`.
 
-## `BsJestFetchMock.mockResponsesStr`
+## `JestFetchMock.mockResponsesStr`
 
 ```reason
-BsJestFetchMock.mockResponsesStr([|
+JestFetchMock.mockResponsesStr([|
   ({|"first body"|}, Js.Undefined.empty),
   (
     {|"second body"|},
@@ -88,10 +90,10 @@ BsJestFetchMock.mockResponsesStr([|
 |]);
 ```
 
-## `BsJestFetchMock.mockResponsesFn`
+## `JestFetchMock.mockResponsesFn`
 
 ```reason
-BsJestFetchMock.mockResponsesFn([|
+JestFetchMock.mockResponsesFn([|
   (_req => Js.Promise.resolve({|"first body"|}), Js.Undefined.empty),
   (
     _req => Js.Promise.resolve({|"second body"|}),
@@ -107,36 +109,36 @@ BsJestFetchMock.mockResponsesFn([|
 |]);
 ```
 
-## `BsJestFetchMock.mockReject`
+## `JestFetchMock.mockReject`
 
 **string**
 ```reason
-BsJestFetchMock.mockReject(Str({|{ "body": "ok" }|}));
+JestFetchMock.mockReject(Str({|{ "body": "ok" }|}));
 ```
 
 **function**
 ```reason
-BsJestFetchMock.mockReject(Fn(_req => Js.Promise.resolve({|{ "body": "ok" }|})));
+JestFetchMock.mockReject(Fn(_req => Js.Promise.resolve({|{ "body": "ok" }|})));
 ```
 
-## `BsJestFetchMock.mockRejectOnce`
+## `JestFetchMock.mockRejectOnce`
 
 Same function signature as `mockReject`.
 
-## `BsJestFetchMock.mockAbort`
+## `JestFetchMock.mockAbort`
 
 ```reason
-BsJestFetchMock.mockReject();
+JestFetchMock.mockReject();
 ```
 
-## `BsJestFetchMock.mockAbortOnce`
+## `JestFetchMock.mockAbortOnce`
 
 Same function signature as `mockAbort`.
 
-## `BsJestFetchMock.resetMocks`
+## `JestFetchMock.resetMocks`
 
 ```reason
-BsJestFetchMock.resetMocks();
+JestFetchMock.resetMocks();
 ```
 
 # Testing the library
