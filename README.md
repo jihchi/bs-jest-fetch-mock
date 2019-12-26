@@ -33,13 +33,13 @@ For more example, please refer to [`JestFetchMock_test.re`](/__tests__/JestFetch
 **string**
 
 ```re
-BsJestFetchMoc.mockResponse(~response=Str({|{ "body": "ok" }|}), ());
+BsJestFetchMock.mockResponse(~response=Str({|{ "body": "ok" }|}), ());
 ```
 
 **function**
 
 ```re
-BsJestFetchMoc.mockResponse(
+BsJestFetchMock.mockResponse(
   ~response=Fn(() => Js.Promise.resolve({|{ "body": "ok" }|})),
   (),
 );
@@ -48,7 +48,7 @@ BsJestFetchMoc.mockResponse(
 **with init**
 
 ```re
-BsJestFetchMoc.mockResponse(
+BsJestFetchMock.mockResponse(
   ~response=Str({|{ "body": "ok" }|}),
   ~init=
     init(
@@ -106,12 +106,12 @@ BsJestFetchMock.mockResponsesFn([|
 
 **string**
 ```re
-BsJestFetchMoc.mockReject(Str({|{ "body": "ok" }|}));
+BsJestFetchMock.mockReject(Str({|{ "body": "ok" }|}));
 ```
 
 **function**
 ```re
-BsJestFetchMoc.mockReject(Fn(() => Js.Promise.resolve({|{ "body": "ok" }|})));
+BsJestFetchMock.mockReject(Fn(() => Js.Promise.resolve({|{ "body": "ok" }|})));
 ```
 
 ## `BsJestFetchMock.mockRejectOnce`
@@ -121,7 +121,7 @@ Same function signature as `mockReject`.
 ## `BsJestFetchMock.mockAbort`
 
 ```re
-BsJestFetchMoc.mockReject();
+BsJestFetchMock.mockReject();
 ```
 
 ## `BsJestFetchMock.mockAbortOnce`
