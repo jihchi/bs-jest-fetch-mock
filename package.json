@@ -18,7 +18,8 @@
   "author": "Jihchi Lee <achi@987.tw>",
   "license": "MIT",
   "files": [
-    "/src/**/*.re"
+    "/src/**/*.re",
+    "bsconfig.json"
   ],
   "dependencies": {},
   "devDependencies": {
