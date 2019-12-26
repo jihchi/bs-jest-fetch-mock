@@ -10,10 +10,11 @@
     { "dir": "src" },
     { "dir": "__tests__", "type": "dev" }
   ],
-  "bs-dependencies": [],
+  "bs-dependencies": [
+		"bs-fetch"
+	],
   "suffix": ".bs.js",
   "bs-dev-dependencies": [
-		"bs-fetch",
     "@glennsl/bs-jest"
   ],
   "warnings": {

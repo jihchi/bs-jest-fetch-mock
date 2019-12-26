@@ -54,9 +54,26 @@ describe("mockResponse", () => {
 
   testPromise("accept a function", () => {
     let expected = {|{ "body": "is a JSON string from a function" }|};
-    mockResponse(~response=Fn(() => resolve(expected)), ());
+    mockResponse(~response=Fn(_req => resolve(expected)), ());
 
     fetch("http://does_not_matter")
+    |> then_(Response.text)
+    |> then_(resp => resp |> expect |> toEqual(expected) |> resolve);
+  });
+
+  testPromise("take request as a argument", () => {
+    let expected = {|{ "body": "is a JSON string from a function" }|};
+    mockResponse(
+      ~response=
+        Fn(
+          req =>
+            Fetch.Request.url(req) == "http://does_matter/"
+              ? resolve(expected) : resolve(""),
+        ),
+      (),
+    );
+
+    fetch("http://does_matter")
     |> then_(Response.text)
     |> then_(resp => resp |> expect |> toEqual(expected) |> resolve);
   });
@@ -74,7 +91,7 @@ describe("mockResponseOnce", () => {
 
   testPromise("accept a function", () => {
     let expected = {|{ "body": "is a JSON string from a function" }|};
-    mockResponseOnce(~response=Fn(() => resolve(expected)), ());
+    mockResponseOnce(~response=Fn(_req => resolve(expected)), ());
 
     fetch("http://does_not_matter")
     |> then_(Response.text)
@@ -94,7 +111,7 @@ describe("once", () => {
 
   testPromise("accept a function", () => {
     let expected = {|{ "body": "is a JSON string from a function" }|};
-    once(~response=Fn(() => resolve(expected)), ());
+    once(~response=Fn(_req => resolve(expected)), ());
 
     fetch("http://does_not_matter")
     |> then_(Response.text)
@@ -128,8 +145,8 @@ describe("mockResponses", () => {
       {|{ "body_2": "is a JSON string from a function" }|},
     |];
     mockResponsesFn([|
-      (() => resolve(expected[0]), Js.Undefined.empty),
-      (() => resolve(expected[1]), Js.Undefined.empty),
+      (_req => resolve(expected[0]), Js.Undefined.empty),
+      (_req => resolve(expected[1]), Js.Undefined.empty),
     |]);
 
     all2((
@@ -156,7 +173,7 @@ describe("mockReject", () => {
 
   testPromise("accept a function", () => {
     let expected = "oops";
-    mockReject(Fn(() => expected->resolve));
+    mockReject(Fn(_req => expected->resolve));
 
     fetch("http://does_not_matter")
     |> then_(_ => fail("should get rejected") |> resolve)
@@ -180,7 +197,7 @@ describe("mockRejectOnce", () => {
 
   testPromise("accept a function", () => {
     let expected = "oops";
-    mockRejectOnce(Fn(() => expected->resolve));
+    mockRejectOnce(Fn(_req => expected->resolve));
 
     fetch("http://does_not_matter")
     |> then_(_ => fail("should get rejected") |> resolve)

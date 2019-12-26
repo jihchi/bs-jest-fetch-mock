@@ -1,6 +1,6 @@
 type response =
   | Str(string)
-  | Fn(unit => Js.Promise.t(string));
+  | Fn(Fetch.request => Js.Promise.t(string));
 
 [@bs.deriving abstract]
 type init = {
@@ -38,7 +38,10 @@ external mockAbortOnce: unit => unit = "mockAbortOnce";
 [@bs.scope "fetch"] [@bs.val]
 external rawMockResponse:
   (
-    [@bs.unwrap] [ | `Str(string) | `Fn(unit => Js.Promise.t(string))],
+    [@bs.unwrap] [
+      | `Str(string)
+      | `Fn(Fetch.request => Js.Promise.t(string))
+    ],
     option(init)
   ) =>
   unit =
@@ -50,7 +53,10 @@ let mockResponse = (~response: response, ~init: option(init)=?, ()) =>
 [@bs.scope "fetch"] [@bs.val]
 external rawMockResponseOnce:
   (
-    [@bs.unwrap] [ | `Str(string) | `Fn(unit => Js.Promise.t(string))],
+    [@bs.unwrap] [
+      | `Str(string)
+      | `Fn(Fetch.request => Js.Promise.t(string))
+    ],
     option(init)
   ) =>
   unit =
@@ -67,14 +73,15 @@ external mockResponsesStr: array((string, Js.Undefined.t(init))) => unit =
 
 [@bs.scope "fetch"] [@bs.val] [@bs.variadic]
 external mockResponsesFn:
-  array((unit => Js.Promise.t(string), Js.Undefined.t(init))) => unit =
+  array((Fetch.request => Js.Promise.t(string), Js.Undefined.t(init))) =>
+  unit =
   "mockResponses";
 
 [@bs.scope "fetch"] [@bs.val]
 external rawMockReject:
   (
   [@bs.unwrap]
-  [ | `Str(string) | `Fn(unit => Js.Promise.t(Js.Promise.error))]
+  [ | `Str(string) | `Fn(Fetch.request => Js.Promise.t(Js.Promise.error))]
   ) =>
   unit =
   "mockReject";
@@ -83,14 +90,14 @@ let mockReject = reject =>
   switch (reject) {
   | Str(str) => rawMockReject(`Str(str))
   | Fn(fn) =>
-    rawMockReject(`Fn(() => fn() |> Js.Promise.then_(promiseReject)))
+    rawMockReject(`Fn(req => fn(req) |> Js.Promise.then_(promiseReject)))
   };
 
 [@bs.scope "fetch"] [@bs.val]
 external rawMockRejectOnce:
   (
   [@bs.unwrap]
-  [ | `Str(string) | `Fn(unit => Js.Promise.t(Js.Promise.error))]
+  [ | `Str(string) | `Fn(Fetch.request => Js.Promise.t(Js.Promise.error))]
   ) =>
   unit =
   "mockRejectOnce";
@@ -99,5 +106,7 @@ let mockRejectOnce = reject =>
   switch (reject) {
   | Str(str) => rawMockRejectOnce(`Str(str))
   | Fn(fn) =>
-    rawMockRejectOnce(`Fn(() => fn() |> Js.Promise.then_(promiseReject)))
+    rawMockRejectOnce(
+      `Fn(req => fn(req) |> Js.Promise.then_(promiseReject)),
+    )
   };

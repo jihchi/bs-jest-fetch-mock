@@ -40,7 +40,12 @@ BsJestFetchMock.mockResponse(~response=Str({|{ "body": "ok" }|}), ());
 
 ```reason
 BsJestFetchMock.mockResponse(
-  ~response=Fn(() => Js.Promise.resolve({|{ "body": "ok" }|})),
+  ~response=
+    Fn(
+      req =>
+        Fetch.Request.url(req) == "http://parsed_url/" ?
+          Js.Promise.resolve({|{ "body": "ok" }|}) : Js.Promise.resolve(""),
+    ),
   (),
 );
 ```
@@ -87,9 +92,9 @@ BsJestFetchMock.mockResponsesStr([|
 
 ```reason
 BsJestFetchMock.mockResponsesFn([|
-  (() => Js.Promise.resolve({|"first body"|}), Js.Undefined.empty),
+  (_req => Js.Promise.resolve({|"first body"|}), Js.Undefined.empty),
   (
-    () => Js.Promise.resolve({|"second body"|}),
+    _req => Js.Promise.resolve({|"second body"|}),
     Js.Undefined.return(
       init(
         ~status=200,
