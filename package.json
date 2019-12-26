@@ -3,6 +3,8 @@
   "version": "1.0.1",
   "description": "jest-fetch-mock bindings for BuckleScript in Reason",
   "repository": "https://github.com/jihchi/bs-jest-fetch-mock.git",
+  "homepage": "https://github.com/jihchi/bs-jest-fetch-mock",
+  "bugs": { "url": "https://github.com/jihchi/bs-jest-fetch-mock/issues" },
   "scripts": {
     "build": "bsb -make-world",
     "clean": "bsb -clean-world",
@@ -13,6 +15,10 @@
   },
   "keywords": [
     "BuckleScript",
+    "ReasonML",
+    "jest",
+    "fetch",
+    "mock",
     "jest-fetch-mock"
   ],
   "author": "Jihchi Lee <achi@987.tw>",
