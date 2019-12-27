@@ -1,6 +1,6 @@
 {
   "name": "bs-jest-fetch-mock",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "jest-fetch-mock bindings for BuckleScript in Reason",
   "repository": "https://github.com/jihchi/bs-jest-fetch-mock.git",
   "homepage": "https://github.com/jihchi/bs-jest-fetch-mock",
