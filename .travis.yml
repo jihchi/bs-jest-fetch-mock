@@ -2,7 +2,9 @@ language: node_js
 node_js:
   - 10
 cache: yarn
+before_install:
+  - 'npm install bs-fetch jest-fetch-mock'
 before_script:
-  - 'yarn build'
+  - 'npm run build'
 after_script:
   - 'npm run coveralls'
