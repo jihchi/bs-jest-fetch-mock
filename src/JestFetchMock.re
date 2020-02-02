@@ -1,6 +1,4 @@
-type response =
-  | Str(string)
-  | Fn(Fetch.request => Js.Promise.t(string));
+type impl = [ | `Fn(Fetch.request => Js.Promise.t(string)) | `Str(string)];
 
 [@bs.deriving abstract]
 type init = {
@@ -11,12 +9,6 @@ type init = {
   [@bs.optional]
   headers: Js.Dict.t(string),
 };
-
-let responseToParameter = response =>
-  switch (response) {
-  | Str(str) => `Str(str)
-  | Fn(fn) => `Fn(fn)
-  };
 
 let promiseReject: string => Js.Promise.t(Js.Promise.error) = [%raw
   str => "return Promise.reject(str)"
@@ -47,8 +39,8 @@ external rawMockResponse:
   unit =
   "mockResponse";
 
-let mockResponse = (~response: response, ~init: option(init)=?, ()) =>
-  rawMockResponse(responseToParameter(response), init);
+let mockResponse = (~response: impl, ~init: option(init)=?, ()) =>
+  rawMockResponse(response, init);
 
 [@bs.scope "fetch"] [@bs.val]
 external rawMockResponseOnce:
@@ -62,8 +54,8 @@ external rawMockResponseOnce:
   unit =
   "mockResponseOnce";
 
-let mockResponseOnce = (~response: response, ~init: option(init)=?, ()) =>
-  rawMockResponseOnce(responseToParameter(response), init);
+let mockResponseOnce = (~response: impl, ~init: option(init)=?, ()) =>
+  rawMockResponseOnce(response, init);
 
 let once = mockResponseOnce;
 
@@ -88,8 +80,8 @@ external rawMockReject:
 
 let mockReject = reject =>
   switch (reject) {
-  | Str(str) => rawMockReject(`Str(str))
-  | Fn(fn) =>
+  | `Str(_str) as original => rawMockReject(original)
+  | `Fn(fn) =>
     rawMockReject(`Fn(req => fn(req) |> Js.Promise.then_(promiseReject)))
   };
 
@@ -104,8 +96,8 @@ external rawMockRejectOnce:
 
 let mockRejectOnce = reject =>
   switch (reject) {
-  | Str(str) => rawMockRejectOnce(`Str(str))
-  | Fn(fn) =>
+  | `Str(_str) as original => rawMockRejectOnce(original)
+  | `Fn(fn) =>
     rawMockRejectOnce(
       `Fn(req => fn(req) |> Js.Promise.then_(promiseReject)),
     )
