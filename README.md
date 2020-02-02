@@ -5,7 +5,7 @@
 # Installation
 
 ```sh
-npm install --save bs-jest-fetch-mock
+npm install --save-dev bs-jest-fetch-mock
 
 # or ...
 
