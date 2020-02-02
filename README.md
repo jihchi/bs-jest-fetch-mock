@@ -4,6 +4,8 @@
 
 # Installation
 
+**Prerequisite**: you have installed [jest-fetch-mock](https://github.com/jefflau/jest-fetch-mock#installation-and-setup).
+
 ```sh
 npm install --save-dev bs-jest-fetch-mock
 
