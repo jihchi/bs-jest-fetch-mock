@@ -30,7 +30,7 @@ Add to `bsconfig.json`
 
 For more example, please refer to [`JestFetchMock_test.re`](/__tests__/JestFetchMock_test.re)
 
-Open or prepend prefix `BsJestFetchMock` if you are using `namespace: true` in `bsconfig.json`.
+`BsJestFetchMock` is the root namespace module.
 
 ## `JestFetchMock.mockResponse`
 
