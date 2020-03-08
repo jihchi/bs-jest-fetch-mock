@@ -151,7 +151,7 @@ JestFetchMock.mockResponsesFn([|
 ```reason
 JestFetchMock.mockResponsesFnResp([|
   (
-	  _req =>
+    _req =>
       response(
         ~body={|"first body"|},
         ~status=418,
