@@ -19,10 +19,6 @@ type responseInit = {
   body: string,
 };
 
-let promiseReject: string => Js.Promise.t(Js.Promise.error) = [%raw
-  str => "return Promise.reject(str)"
-];
-
 [@bs.scope "fetch"] [@bs.val] external resetMocks: unit => unit = "resetMocks";
 
 [@bs.scope "fetch"] [@bs.val]

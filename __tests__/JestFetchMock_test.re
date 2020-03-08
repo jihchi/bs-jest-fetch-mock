@@ -4,7 +4,7 @@ open JestFetchMock;
 open Fetch;
 open Js.Promise;
 
-external unsafeErrorToString: Js.Promise.error => string = "%identity";
+exception Sorry(string);
 
 beforeEach(() => resetMocks());
 
@@ -84,6 +84,49 @@ describe("mockResponse", () => {
     |> then_(Response.text)
     |> then_(resp => resp |> expect |> toEqual(expected) |> resolve);
   });
+
+  testPromise(
+    "accept a function and response with customized status / statusText / headers",
+    () => {
+      let expected = {|{ "body": "is a JSON string from a function" }|};
+
+      mockResponse(
+        `FnResp(
+          _req =>
+            responseInit(
+              ~body=expected,
+              ~status=418,
+              ~statusText="I'm a teapot",
+              ~headers=
+                Js.Dict.fromList([("Authorization", "Bearer <token>")]),
+              (),
+            )
+            |> resolve,
+        ),
+        Js.Undefined.empty,
+      );
+
+      fetch("http://does_not_matter")
+      |> then_(resp =>
+           all4((
+             resp |> Response.text,
+             resp |> Response.status |> resolve,
+             resp |> Response.statusText |> resolve,
+             resp
+             |> Response.headers
+             |> Headers.get("Authorization")
+             |> Belt.Option.getWithDefault(_, "<ERROR>")
+             |> resolve,
+           ))
+         )
+      |> then_(resp =>
+           resp
+           |> expect
+           |> toEqual((expected, 418, "I'm a teapot", "Bearer <token>"))
+           |> resolve
+         );
+    },
+  );
 });
 
 describe("mockResponseOnce", () => {
@@ -106,6 +149,50 @@ describe("mockResponseOnce", () => {
     |> then_(Response.text)
     |> then_(resp => resp |> expect |> toEqual(expected) |> resolve);
   });
+
+  testPromise(
+    "accept a function and response with customized status / statusText / headers",
+    () => {
+      let expected = {|{ "body": "is a JSON string from a function" }|};
+
+      mockResponseOnce(
+        `FnResp(
+          _req =>
+            responseInit(
+              ~body=expected,
+              ~status=418,
+              ~statusText="I'm a teapot",
+              ~headers=
+                Js.Dict.fromList([("Authorization", "Bearer <token>")]),
+              (),
+            )
+            |> resolve,
+        ),
+        Js.Undefined.empty,
+      );
+
+      fetch("http://does_not_matter")
+      |> then_(resp =>
+           all4((
+             resp |> Response.text,
+             resp |> Response.status |> resolve,
+             resp |> Response.statusText |> resolve,
+             resp
+             |> Response.headers
+             |> Headers.get("Authorization")
+             |> Belt.Option.getWithDefault(_, "<ERROR>")
+             |> resolve,
+           ))
+         )
+      |> then_(resp =>
+           resp
+           |> expect
+           |> toEqual((expected, 418, "I'm a teapot", "Bearer <token>"))
+           |> resolve
+         );
+    },
+  );
+
 });
 
 describe("once", () => {
@@ -128,6 +215,49 @@ describe("once", () => {
     |> then_(Response.text)
     |> then_(resp => resp |> expect |> toEqual(expected) |> resolve);
   });
+
+  testPromise(
+    "accept a function and response with customized status / statusText / headers",
+    () => {
+      let expected = {|{ "body": "is a JSON string from a function" }|};
+
+      once(
+        `FnResp(
+          _req =>
+            responseInit(
+              ~body=expected,
+              ~status=418,
+              ~statusText="I'm a teapot",
+              ~headers=
+                Js.Dict.fromList([("Authorization", "Bearer <token>")]),
+              (),
+            )
+            |> resolve,
+        ),
+        Js.Undefined.empty,
+      );
+
+      fetch("http://does_not_matter")
+      |> then_(resp =>
+           all4((
+             resp |> Response.text,
+             resp |> Response.status |> resolve,
+             resp |> Response.statusText |> resolve,
+             resp
+             |> Response.headers
+             |> Headers.get("Authorization")
+             |> Belt.Option.getWithDefault(_, "<ERROR>")
+             |> resolve,
+           ))
+         )
+      |> then_(resp =>
+           resp
+           |> expect
+           |> toEqual((expected, 418, "I'm a teapot", "Bearer <token>"))
+           |> resolve
+         );
+    },
+  );
 });
 
 describe("mockResponses", () => {
@@ -177,20 +307,18 @@ describe("mockReject", () => {
     fetch("http://does_not_matter")
     |> then_(_ => fail("should get rejected") |> resolve)
     |> catch(resp =>
-         resp |> unsafeErrorToString |> expect |> toEqual(expected) |> resolve
+         Obj.magic(resp) |> expect |> toEqual(expected) |> resolve
        );
   });
 
   testPromise("accept a function", () => {
     let expected = "oops";
 
-    mockReject(`FnStr(_req => expected |> Js.Exn.raiseError |> reject));
+    mockReject(`FnStr(_req => Sorry(expected) |> reject));
 
     fetch("http://does_not_matter")
     |> then_(_ => fail("should get rejected") |> resolve)
-    |> catch(resp =>
-         resp |> unsafeErrorToString |> expect |> toEqual(expected) |> resolve
-       );
+    |> catch(resp => Obj.magic(resp) |> toEqual(Sorry(expected)) |> resolve);
   });
 });
 
@@ -203,19 +331,19 @@ describe("mockRejectOnce", () => {
     fetch("http://does_not_matter")
     |> then_(_ => fail("should get rejected") |> resolve)
     |> catch(resp =>
-         resp |> unsafeErrorToString |> expect |> toEqual(expected) |> resolve
+         Obj.magic(resp) |> expect |> toEqual(expected) |> resolve
        );
   });
 
   testPromise("accept a function", () => {
     let expected = "oops";
 
-    mockRejectOnce(`FnStr(_req => expected |> Js.Exn.raiseError |> resolve));
+    mockRejectOnce(`FnStr(_req => Sorry(expected) |> reject));
 
     fetch("http://does_not_matter")
     |> then_(_ => fail("should get rejected") |> resolve)
     |> catch(resp =>
-         resp |> unsafeErrorToString |> expect |> toEqual(expected) |> resolve
+         Obj.magic(resp) |> expect |> toEqual(Sorry(expected)) |> resolve
        );
   });
 });
