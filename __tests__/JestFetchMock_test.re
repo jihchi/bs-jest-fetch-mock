@@ -25,7 +25,7 @@ describe("mockResponse", () => {
     mockResponse(
       `Str(expected),
       Js.Undefined.return(
-        requestInit(
+        init(
           ~status=204,
           ~statusText="nothing for you",
           ~headers=Js.Dict.fromList([("Authorization", "Bearer <token>")]),
@@ -93,7 +93,7 @@ describe("mockResponse", () => {
       mockResponse(
         `FnResp(
           _req =>
-            responseInit(
+            response(
               ~body=expected,
               ~status=418,
               ~statusText="I'm a teapot",
@@ -158,7 +158,7 @@ describe("mockResponseOnce", () => {
       mockResponseOnce(
         `FnResp(
           _req =>
-            responseInit(
+            response(
               ~body=expected,
               ~status=418,
               ~statusText="I'm a teapot",
@@ -224,7 +224,7 @@ describe("once", () => {
       once(
         `FnResp(
           _req =>
-            responseInit(
+            response(
               ~body=expected,
               ~status=418,
               ~statusText="I'm a teapot",

@@ -1,5 +1,5 @@
 [@bs.deriving abstract]
-type requestInit = {
+type init = {
   [@bs.optional]
   status: int,
   [@bs.optional]
@@ -9,7 +9,7 @@ type requestInit = {
 };
 
 [@bs.deriving abstract]
-type responseInit = {
+type response = {
   [@bs.optional]
   status: int,
   [@bs.optional]
@@ -37,10 +37,10 @@ external mockResponse:
   (
     [@bs.unwrap] [
       | `FnStr(Fetch.request => Js.Promise.t(string))
-      | `FnResp(Fetch.request => Js.Promise.t(responseInit))
+      | `FnResp(Fetch.request => Js.Promise.t(response))
       | `Str(string)
     ],
-    Js.Undefined.t(requestInit)
+    Js.Undefined.t(init)
   ) =>
   unit =
   "mockResponse";
@@ -50,10 +50,10 @@ external mockResponseOnce:
   (
     [@bs.unwrap] [
       | `FnStr(Fetch.request => Js.Promise.t(string))
-      | `FnResp(Fetch.request => Js.Promise.t(responseInit))
+      | `FnResp(Fetch.request => Js.Promise.t(response))
       | `Str(string)
     ],
-    Js.Undefined.t(requestInit)
+    Js.Undefined.t(init)
   ) =>
   unit =
   "mockResponseOnce";
@@ -62,13 +62,16 @@ let once = mockResponseOnce;
 
 [@bs.scope "fetch"] [@bs.val] [@bs.variadic]
 external mockResponsesStr:
-  array((string, Js.Undefined.t(requestInit))) => unit =
+  array((string, Js.Undefined.t(init))) => unit =
   "mockResponses";
 
 [@bs.scope "fetch"] [@bs.val] [@bs.variadic]
 external mockResponsesFn:
   array(
-    (Fetch.request => Js.Promise.t(string), Js.Undefined.t(requestInit)),
+    (
+      Fetch.request => Js.Promise.t(string),
+      Js.Undefined.t(init),
+    ),
   ) =>
   unit =
   "mockResponses";
@@ -77,8 +80,8 @@ external mockResponsesFn:
 external mockResponsesFnResp:
   array(
     (
-      Fetch.request => Js.Promise.t(responseInit),
-      Js.Undefined.t(requestInit),
+      Fetch.request => Js.Promise.t(response),
+      Js.Undefined.t(init),
     ),
   ) =>
   unit =
