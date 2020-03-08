@@ -37,35 +37,70 @@ For more example, please refer to [`JestFetchMock_test.re`](/__tests__/JestFetch
 **string**
 
 ```reason
-JestFetchMock.mockResponse(~response=Str({|{ "body": "ok" }|}), ());
+JestFetchMock.mockResponse(`Str({|{ "body": "ok" }|}), Js.Undefined.empty);
 ```
 
-**function**
+**string with init**
 
 ```reason
 JestFetchMock.mockResponse(
-  ~response=
-    Fn(
-      req =>
-        Fetch.Request.url(req) == "http://parsed_url/" ?
-          Js.Promise.resolve({|{ "body": "ok" }|}) : Js.Promise.resolve(""),
+  `Str({|{ "body": "ok" }|}),
+  Js.Undefined.return(
+    init(
+      ~status=204,
+      ~statusText="nothing for you",
+      ~headers=Js.Dict.fromList([("Authorization", "Bearer <token>")]),
+      (),
     ),
-  (),
+  ),
 );
 ```
 
-**with init**
+**function (with string)**
 
 ```reason
 JestFetchMock.mockResponse(
-  ~response=Str({|{ "body": "ok" }|}),
-  ~init=
-    init(
-      ~status=200,
-      ~statusText="ok",
-      ~headers=Js.Dict.fromList([("Authorization", "Bearer <token>")]),
-    ),
-  (),
+  `FnStr(
+    req =>
+      if (Fetch.Request.url(req) == "http://parsed_url/") {
+        resolve({|{ "body": "ok" }|});
+      } else {
+        resolve("");
+      },
+  ),
+  Js.Undefined.empty,
+);
+```
+
+**function (with response)**
+
+```reason
+JestFetchMock.mockResponse(
+  `FnResp(
+    req =>
+      if (Fetch.Request.url(req) == "http://parsed_url/") {
+        response(
+          ~body={|{ "body": "ok" }|},
+          ~status=200,
+          ~statusText="OK",
+          ~headers=
+            Js.Dict.fromList([("Authorization", "Bearer <token>")]),
+          (),
+        )
+        |> resolve,
+      } else {
+        response(
+          ~body="",
+          ~status=418,
+          ~statusText="I'm a teapot",
+          ~headers=
+            Js.Dict.fromList([("Authorization", "Bearer <token>")]),
+          (),
+        )
+        |> resolve,
+      },
+  ),
+  Js.Undefined.empty,
 );
 ```
 
@@ -111,16 +146,52 @@ JestFetchMock.mockResponsesFn([|
 |]);
 ```
 
+## `JestFetchMock.mockResponsesFnResp`
+
+```reason
+JestFetchMock.mockResponsesFnResp([|
+  (
+	  _req =>
+      response(
+        ~body={|"first body"|},
+        ~status=418,
+        ~statusText="I'm a teapot",
+        (),
+      )
+      |> resolve,
+	  Js.Undefined.empty
+	),
+  (
+    _req =>
+      response(
+        ~body={|"second body"|},
+        (),
+      )
+      |> resolve,
+    Js.Undefined.return(
+      init(
+        ~status=200,
+        ~statusText="ok",
+        ~headers=Js.Dict.fromList([("Authorization", "Bearer <token>")]),
+        (),
+      ),
+    ),
+  ),
+|]);
+```
+
 ## `JestFetchMock.mockReject`
 
 **string**
+
 ```reason
-JestFetchMock.mockReject(Str({|{ "body": "ok" }|}));
+JestFetchMock.mockReject(`Str({|{ "body": "ok" }|}));
 ```
 
 **function**
+
 ```reason
-JestFetchMock.mockReject(Fn(_req => Js.Promise.resolve({|{ "body": "ok" }|})));
+JestFetchMock.mockReject(`FnStr(_req => Js.Promise.resolve({|{ "body": "ok" }|})));
 ```
 
 ## `JestFetchMock.mockRejectOnce`
