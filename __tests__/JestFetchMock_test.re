@@ -192,7 +192,6 @@ describe("mockResponseOnce", () => {
          );
     },
   );
-
 });
 
 describe("once", () => {
@@ -294,6 +293,75 @@ describe("mockResponses", () => {
     ))
     |> then_(resp =>
          resp |> expect |> toEqual((expected1, expected2)) |> resolve
+       );
+  });
+
+  testPromise("accept array of function with customized response", () => {
+    let expected1 = {|{ "body_1": "is a JSON string from a function" }|};
+    let expected2 = {|{ "body_2": "is a JSON string from a function" }|};
+
+    mockResponsesFnResp([|
+      (
+        _req =>
+          response(
+            ~body=expected1,
+            ~status=418,
+            ~statusText="I'm a teapot",
+            (),
+          )
+          |> resolve,
+        Js.Undefined.empty,
+      ),
+      (
+        _req =>
+          response(
+            ~body=expected2,
+            ~status=200,
+            ~statusText="OK",
+            ~headers=Js.Dict.fromList([("Authorization", "Bearer <token>")]),
+            (),
+          )
+          |> resolve,
+        Js.Undefined.empty,
+      ),
+    |]);
+
+    all2((
+      fetch("http://does_not_matter_1")
+      |> then_(resp =>
+           all4((
+             resp |> Response.text,
+             resp |> Response.status |> resolve,
+             resp |> Response.statusText |> resolve,
+             resp
+             |> Response.headers
+             |> Headers.get("Authorization")
+             |> Belt.Option.getWithDefault(_, "N/A")
+             |> resolve,
+           ))
+         ),
+      fetch("http://does_not_matter_2")
+      |> then_(resp =>
+           all4((
+             resp |> Response.text,
+             resp |> Response.status |> resolve,
+             resp |> Response.statusText |> resolve,
+             resp
+             |> Response.headers
+             |> Headers.get("Authorization")
+             |> Belt.Option.getWithDefault(_, "<ERROR>")
+             |> resolve,
+           ))
+         ),
+    ))
+    |> then_(resp =>
+         resp
+         |> expect
+         |> toEqual((
+              (expected1, 418, "I'm a teapot", "N/A"),
+              (expected2, 200, "OK", "Bearer <token>"),
+            ))
+         |> resolve
        );
   });
 });
