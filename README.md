@@ -4,14 +4,31 @@
 
 # Installation
 
-**Prerequisite**: you have installed [jest-fetch-mock](https://github.com/jefflau/jest-fetch-mock#installation-and-setup).
-
 ```sh
-npm install --save-dev bs-jest-fetch-mock
+npm install --save-dev bs-jest-fetch-mock jest-fetch-mock
 
-# or ...
+# or yarn...
 
-yarn add -D bs-jest-fetch-mock
+yarn add -D bs-jest-fetch-mock jest-fetch-mock
+```
+
+Add following code to your Jest's [setupFiles](https://jestjs.io/docs/en/configuration#setupfiles-array):
+
+```js
+// jest.setup.js
+require('jest-fetch-mock').enableMocks();
+```
+
+Add following code to your Jest's [configuration](https://jestjs.io/docs/en/configuration):
+
+```js
+// package.json
+"jest": {
+  "automock": false,
+  "setupFiles": [
+    "./jest.setup.js"
+  ]
+}
 ```
 
 # Usage
