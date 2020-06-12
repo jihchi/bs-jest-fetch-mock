@@ -10,6 +10,7 @@
   "scripts": {
     "build": "bsb -make-world",
     "clean": "bsb -clean-world",
+    "coverage": "npm run clean && BISECT_ENABLE=yes npm run test",
     "prepublishOnly": "npm run build",
     "start": "bsb -make-world -w",
     "test": "bsb -make-world && jest"
@@ -28,7 +29,9 @@
     "/src/**/*.re",
     "bsconfig.json"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "bisect_ppx": "^2.4.0"
+  },
   "devDependencies": {
     "@glennsl/bs-jest": "^0.5.1",
     "bs-fetch": "^0.5.2",
@@ -44,6 +47,9 @@
     "automock": false,
     "setupFiles": [
       "<rootDir>/setup.jest.js"
+    ],
+    "setupFilesAfterEnv": [
+      "bisect_ppx/src/runtime/bucklescript/jest.js"
     ]
   }
 }
